@@ -1,0 +1,7 @@
+## Interface: 80205
+## Title: TimePerLevel
+## Author: Chris VanderKooi
+## Version: 1.0.0
+## SavedVariablesPerCharacter: TimePerLevel_LevelCounts
+
+main.lua
