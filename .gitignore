@@ -52,3 +52,4 @@ luac.out
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history
+dist/
