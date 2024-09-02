@@ -1,7 +1,33 @@
 local addonName = "TimePerLevel";
 local addonPrefix = "TPL: ";
 
-local frame = CreateFrame("FRAME", "TimePerLevelMainFrame", UIParent, "BasicFrameTemplateWithInset");
+local mainFrame = CreateFrame("FRAME", "TimePerLevelMainFrame", UIParent, "BasicFrameTemplateWithInset");
+
+-- create/set options for basic UI frame
+mainFrame:SetSize(500, 350)
+mainFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+mainFrame.TitleBg:SetHeight(30)
+mainFrame.title = mainFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+mainFrame.title:SetPoint("TOPLEFT", mainFrame.TitleBg, "TOPLEFT", 5, -3)
+mainFrame.title:SetText(addonName)
+-- add interactivity to the frame
+mainFrame:EnableMouse(true)
+mainFrame:SetMovable(true)
+mainFrame:RegisterForDrag("LeftButton")
+mainFrame:SetScript("OnDragStart", function(self)
+	self:StartMoving()
+end)
+mainFrame:SetScript("OnDragStop", function(self)
+	self:StopMovingOrSizing()
+end)
+
+mainFrame:SetScript("OnShow", function()
+        PlaySound(808)
+end)
+
+mainFrame:SetScript("OnHide", function()
+        PlaySound(808)
+end)
 
 -- tracking the dinged level while waiting for async played event
 local newLevel = 0;
@@ -10,9 +36,9 @@ local newLevel = 0;
 local waitingForTimePlayed = false;
 
 -- event registration
-frame:RegisterEvent("ADDON_LOADED");
-frame:RegisterEvent("PLAYER_LEVEL_UP");
-frame:RegisterEvent("TIME_PLAYED_MSG");
+mainFrame:RegisterEvent("ADDON_LOADED");
+mainFrame:RegisterEvent("PLAYER_LEVEL_UP");
+mainFrame:RegisterEvent("TIME_PLAYED_MSG");
 
 -- first run for character
 function InitializeTableForCharacter()
@@ -21,12 +47,12 @@ function InitializeTableForCharacter()
 end
 
 -- record game time
-function frame:RecordGameTime(level, totaltime)
+function mainFrame:RecordGameTime(level, totaltime)
     TimePerLevel_LevelCounts[level - 1] = totaltime;
 end
 
 -- event listeners
-function frame:OnEvent(event, arg1)
+function mainFrame:OnEvent(event, arg1)
     if (event == "ADDON_LOADED" and arg1 == addonName) then
         -- check if db created
         if TimePerLevel_LevelCounts == nil then
@@ -41,14 +67,14 @@ function frame:OnEvent(event, arg1)
     end
     if event == "TIME_PLAYED_MSG" then
         if waitingForTimePlayed then
-            frame:RecordGameTime(newLevel, arg1);
+            mainFrame:RecordGameTime(newLevel, arg1);
             waitingForTimePlayed = false;
         end
     end
 end
 
 -- register listener func
-frame:SetScript("OnEvent", frame.OnEvent);
+mainFrame:SetScript("OnEvent", mainFrame.OnEvent);
 
 -- triggered funcs
 function printAllLevels()
