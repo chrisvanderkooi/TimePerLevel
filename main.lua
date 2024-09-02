@@ -1,8 +1,14 @@
-local addonName = "TimePerLevel";
-local addonPrefix = "TPL: ";
+local addonName = "TimePerLevel"
+local addonPrefix = "TPL: "
+local mainFrameName = addonName .. "MainFrame"
 
-local mainFrame = CreateFrame("FRAME", "TimePerLevelMainFrame", UIParent, "BasicFrameTemplateWithInset");
+-- create and set ui frame
+local mainFrame = CreateFrame("FRAME", mainFrameName, UIParent, "BasicFrameTemplateWithInset")
 
+-- enables 'esc' key press
+table.insert(UISpecialFrames, mainFrameName)
+
+-- set props on frame
 -- create/set options for basic UI frame
 mainFrame:SetSize(500, 350)
 mainFrame:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
@@ -10,21 +16,21 @@ mainFrame.TitleBg:SetHeight(30)
 mainFrame.title = mainFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
 mainFrame.title:SetPoint("TOPLEFT", mainFrame.TitleBg, "TOPLEFT", 5, -3)
 mainFrame.title:SetText(addonName)
+mainFrame:Hide() -- don't show frame until called
+
 -- add interactivity to the frame
 mainFrame:EnableMouse(true)
 mainFrame:SetMovable(true)
 mainFrame:RegisterForDrag("LeftButton")
 mainFrame:SetScript("OnDragStart", function(self)
-	self:StartMoving()
+    self:StartMoving()
 end)
 mainFrame:SetScript("OnDragStop", function(self)
-	self:StopMovingOrSizing()
+    self:StopMovingOrSizing()
 end)
-
 mainFrame:SetScript("OnShow", function()
         PlaySound(808)
 end)
-
 mainFrame:SetScript("OnHide", function()
         PlaySound(808)
 end)
@@ -43,7 +49,7 @@ mainFrame:RegisterEvent("TIME_PLAYED_MSG");
 -- first run for character
 function InitializeTableForCharacter()
     TimePerLevel_LevelCounts = {}
-    print(addonName .. ": Initialized");
+    print(addonName .. ": Initialized for " .. UnitName("player"));
 end
 
 -- record game time
@@ -70,6 +76,15 @@ function mainFrame:OnEvent(event, arg1)
             mainFrame:RecordGameTime(newLevel, arg1);
             waitingForTimePlayed = false;
         end
+    end
+end
+
+-- UI funcs
+function toggleWindow()
+    if mainFrame:IsShown() then
+        mainFrame:Hide()
+    else
+        mainFrame:Show()
     end
 end
 
@@ -194,30 +209,31 @@ function noDataForLevel(level)
 end
 
 -- chat commands to print leveling data into chat
-SLASH_TPL1 = "/timeperlevel";
-SLASH_TPL2 = "/tpl";
+SLASH_TPL1 = "/timeperlevel"
+SLASH_TPL2 = "/tpl"
 function SlashCmdList.TPL(msg)
     -- note: msg is always true and is a string
 
     -- last level arg
     if msg == "last" then
-        printLastLevel();
+        printLastLevel()
         do return end
     end
 
     -- specific level arg
     if msg and string.len(msg) > 0 then
         -- verify it is a number being passed as arg
-        local levelRequested = tonumber(msg);
+        local levelRequested = tonumber(msg)
 
         if (type(levelRequested) == "number") then
-            printLevel(levelRequested);
-            do return end;
+            printLevel(levelRequested)
+            do return end
         end
 
-        print(addonPrefix .. "You must provide a past level (eg. /tpl 20)");
+        print(addonPrefix .. "You must provide a past level (eg. /tpl 20)")
         do return end
     end
 
-    printAllLevels();
+    toggleWindow(mainFrame)
+    printAllLevels()
 end

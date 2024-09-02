@@ -1,7 +1,7 @@
-## Interface: 110002
+## Interface: 110000, 110002
 ## Title: TimePerLevel
-## Author: Chris VanderKooi
-## Version: 1.0.1
+## Author: Extrix-Proudmoore
+## Version: 2.0.0
 ## SavedVariablesPerCharacter: TimePerLevel_LevelCounts
 ## X-Curse-Project-ID: 352437
 
