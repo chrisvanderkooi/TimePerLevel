@@ -1,7 +1,8 @@
-## Interface: 90001
+## Interface: 110002
 ## Title: TimePerLevel
 ## Author: Chris VanderKooi
 ## Version: 1.0.1
 ## SavedVariablesPerCharacter: TimePerLevel_LevelCounts
+## X-Curse-Project-ID: 352437
 
 main.lua
