@@ -1,7 +1,7 @@
 local addonName = "TimePerLevel";
 local addonPrefix = "TPL: ";
 
-local frame = CreateFrame("FRAME");
+local frame = CreateFrame("FRAME", "TimePerLevelMainFrame", UIParent, "BasicFrameTemplateWithInset");
 
 -- tracking the dinged level while waiting for async played event
 local newLevel = 0;
